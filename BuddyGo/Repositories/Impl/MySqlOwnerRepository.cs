@@ -1,5 +1,6 @@
 ﻿using BuddyGo.Data;
 using BuddyGo.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BuddyGo.Repositories.Impl {
     public class MySqlOwnerRepository : IOwnerRepository {
@@ -15,7 +16,7 @@ namespace BuddyGo.Repositories.Impl {
         }
 
         public async Task<Owner> GetOwnerById(string id) {
-            var owner = await _dbContext.Owners.FindAsync(id);
+            var owner = await _dbContext.Owners.Where(o => o.Id == id).Include(o => o.Pets).FirstOrDefaultAsync();
             return owner;
         }
 

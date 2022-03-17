@@ -21,6 +21,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IPasswordEncryptor, PasswordEncryptor>();
 builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
+builder.Services.AddScoped<IPetRepository, MySqlPetRepository>();
+builder.Services.AddScoped<IPetService, PetService>();
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
