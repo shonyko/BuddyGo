@@ -57,4 +57,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.Run();
