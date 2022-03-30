@@ -42,5 +42,13 @@ namespace BuddyGo.Controllers {
             if (!res) return NotFound();
             return NoContent();
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> GetOwnerByLogin(OwnerLoginDTO ownerLoginDTO) {
+            var owner = await _ownerService.GetOwnerByLogin(ownerLoginDTO);
+            if (owner == null) return NotFound();
+            Console.WriteLine(owner);
+            return Ok(owner);
+        }
     }
 }

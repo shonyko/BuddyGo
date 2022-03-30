@@ -33,9 +33,17 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = "";
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 } else {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -56,8 +64,5 @@ app.MapControllerRoute(
 );
 
 app.MapRazorPages();
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.Run();

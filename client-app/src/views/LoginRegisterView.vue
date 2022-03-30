@@ -11,7 +11,7 @@
           alt="BuddyGo Logo"
           class="shrink mr-2"
           contain
-          src="../assets/BuddyGoLogo.png"
+          src="@/assets/BuddyGoLogo.png"
           transition="scale-transition"
           width="100"
         />
@@ -163,6 +163,8 @@
 </template>
 
 <script>
+import cfg from '@/config/config.js';
+
 export default {
   name: "LoginRegisterView",
   computed: {
@@ -171,11 +173,24 @@ export default {
     },
   },
   methods: {
-    validate() {
-      if (this.$refs.loginForm.validate()) {
-        // submit form to server/API here...
-      }
-    },
+      async submitLogin() {
+        if (this.$refs.loginForm.validate()) {
+            const authData = {
+                Username: this.name,
+                Password: this.password
+            };
+            try {
+                var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/login`, { authData });
+            } catch(e) {
+
+            }
+        }
+      },
+    // validate() {
+    //   if (this.$refs.loginForm.validate()) {
+    //     // submit form to server/API here...
+    //   }
+    // },
     reset() {
       this.$refs.form.reset();
     },

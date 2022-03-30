@@ -8,6 +8,7 @@ namespace BuddyGo.Maps {
             CreateMap<Owner, OwnerDTO>();
             CreateMap<OwnerCreateDTO, Owner>();
             CreateMap<OwnerUpdateDTO, Owner>();
+            CreateMap<OwnerLoginDTO, Owner>();
         }
     }
 }
