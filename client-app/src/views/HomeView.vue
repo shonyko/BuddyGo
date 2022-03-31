@@ -25,5 +25,15 @@
 <script>
 export default {
   name: "HomeView",
+  data: () => ({
+    pets: [],
+  }),
+  mounted() {
+    const user = window.localStorage.getItem("user");
+    if (user == null) {
+      this.$router.push({ name: "login" });
+      return;
+    }
+  },
 };
 </script>

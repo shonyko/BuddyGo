@@ -1,3 +1,3 @@
 export default {
-    BACKEND_ADDR: 'localhost:7165'
-}
+  BACKEND_ADDR: "https://localhost:7165",
+};

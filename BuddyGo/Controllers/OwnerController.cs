@@ -50,5 +50,8 @@ namespace BuddyGo.Controllers {
             Console.WriteLine(owner);
             return Ok(owner);
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(OwnerCreateDTO ownerCreateDTO) => await CreateOwner(ownerCreateDTO);
     }
 }

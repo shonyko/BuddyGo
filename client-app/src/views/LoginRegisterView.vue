@@ -34,7 +34,7 @@
             grow
           >
             <v-tabs-slider color="purple darken-4"></v-tabs-slider>
-            <v-tab v-for="i in tabs" :key="i">
+            <v-tab v-for="i in tabs" :key="i.name">
               <v-icon large>{{ i.icon }}</v-icon>
               <div class="caption py-1">{{ i.name }}</div>
             </v-tab>
@@ -45,9 +45,9 @@
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
-                          v-model="loginEmail"
-                          :rules="loginEmailRules"
-                          label="E-mail"
+                          v-model="loginUsername"
+                          :rules="[rules.required]"
+                          label="Username"
                           required
                         ></v-text-field>
                       </v-col>
@@ -72,7 +72,7 @@
                           block
                           :disabled="!valid"
                           color="success"
-                          @click="validate"
+                          @click="submitLogin"
                         >
                           Login
                         </v-btn>
@@ -113,7 +113,21 @@
                           required
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12">
+                      <v-col cols="6">
+                        <v-text-field
+                          v-model="username"
+                          label="Username"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                          v-model="phone"
+                          label="Phone"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
                         <v-text-field
                           v-model="password"
                           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -126,7 +140,7 @@
                           @click:append="show1 = !show1"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12">
+                      <v-col cols="6">
                         <v-text-field
                           block
                           v-model="verify"
@@ -146,7 +160,7 @@
                           block
                           :disabled="!valid"
                           color="success"
-                          @click="validate"
+                          @click="submitRegister"
                           >Register</v-btn
                         >
                       </v-col>
@@ -158,12 +172,16 @@
           </v-tabs>
         </div>
       </v-dialog>
+      <v-alert v-show="alertVisible" type="error" dismissible>
+        {{ alertMsg }}
+      </v-alert>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import cfg from '@/config/config.js';
+import axios from "axios";
+import cfg from "@/config/config.js";
 
 export default {
   name: "LoginRegisterView",
@@ -173,19 +191,49 @@ export default {
     },
   },
   methods: {
-      async submitLogin() {
-        if (this.$refs.loginForm.validate()) {
-            const authData = {
-                Username: this.name,
-                Password: this.password
-            };
-            try {
-                var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/login`, { authData });
-            } catch(e) {
-
-            }
+    async submitLogin() {
+      if (this.$refs.loginForm.validate()) {
+        const authData = {
+          Username: this.loginUsername,
+          Password: this.loginPassword,
+        };
+        try {
+          var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/login`, {
+            authData,
+          });
+          window.localStorage.setItem("user", result.data);
+          this.$router.push({ name: "home" });
+        } catch (e) {
+          console.log(e);
+          this.alertMsg = "Username or password incorrect!";
+          this.alertVisible = true;
+          setTimeout(() => (this.alertVisible = false), 2000);
         }
-      },
+      }
+    },
+    async submitRegister() {
+      if (this.$refs.registerForm.validate()) {
+        const authData = {
+          Username: this.username,
+          Password: this.password,
+        };
+        try {
+          var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/register`, {
+            authData,
+            Name: `${this.lastName} ${this.firstName}`,
+            PhoneNumber: this.phone,
+            Email: this.email,
+          });
+          window.localStorage.setItem("user", result.data);
+          this.$router.push({ name: "home" });
+        } catch (e) {
+          console.log(e);
+          this.alertMsg = "Oops! There was an error.";
+          this.alertVisible = true;
+          setTimeout(() => (this.alertVisible = false), 2000);
+        }
+      }
+    },
     // validate() {
     //   if (this.$refs.loginForm.validate()) {
     //     // submit form to server/API here...
@@ -205,14 +253,18 @@ export default {
       { name: "Login", icon: "mdi-account" },
       { name: "Register", icon: "mdi-account-outline" },
     ],
+    alertVisible: false,
+    alertMsg: "",
     valid: true,
     firstName: "",
     lastName: "",
     email: "",
+    username: "",
+    phone: "",
     password: "",
     verify: "",
     loginPassword: "",
-    loginEmail: "",
+    loginUsername: "",
     loginEmailRules: [
       (v) => !!v || "Required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
@@ -225,8 +277,18 @@ export default {
     show1: false,
     rules: {
       required: (value) => !!value || "Required.",
-      min: (v) => (v && v.length >= 8) || "Min 8 characters",
+      min: (v) => (v && v.length >= 4) || "Min 4 characters",
     },
   }),
 };
 </script>
+
+<style scoped>
+.v-alert {
+  position: fixed;
+  right: 1%;
+  bottom: 15px;
+  margin: 0 auto;
+  z-index: 1000;
+}
+</style>

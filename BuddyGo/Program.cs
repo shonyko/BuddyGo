@@ -31,6 +31,16 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(
+        builder => {
+            builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        }
+    );
+});
+
 var app = builder.Build();
 
 app.UseSwaggerUI(c =>
@@ -50,10 +60,12 @@ if (app.Environment.IsDevelopment()) {
     app.UseHsts();
 }
 
+app.UseCors();
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 //app.UseAuthentication();
 //app.UseAuthorization();
