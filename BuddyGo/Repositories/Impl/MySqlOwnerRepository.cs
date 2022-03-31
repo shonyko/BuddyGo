@@ -29,6 +29,7 @@ namespace BuddyGo.Repositories.Impl {
             if (owner == null) throw new ArgumentNullException(nameof(owner));
             var byLogin = await _dbContext.Owners
                 .Include(o => o.AuthData)
+                .Include(o => o.Pets)
                 .FirstOrDefaultAsync(o => o.AuthData.Username.Equals(owner.AuthData.Username) && o.AuthData.Password.Equals(owner.AuthData.Password));
             
             //var byLogin = users.FirstOrDefault(o => {

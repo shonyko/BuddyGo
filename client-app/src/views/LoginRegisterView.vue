@@ -190,6 +190,13 @@ export default {
       return () => this.password === this.verify || "Password must match";
     },
   },
+  mounted() {
+    const user = JSON.parse(window.localStorage.getItem("user"));
+    if (user != null) {
+      this.$router.push({ name: "home" });
+      return;
+    }
+  },
   methods: {
     async submitLogin() {
       if (this.$refs.loginForm.validate()) {
@@ -201,7 +208,7 @@ export default {
           var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/login`, {
             authData,
           });
-          window.localStorage.setItem("user", result.data);
+          window.localStorage.setItem("user", JSON.stringify(result.data));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);
@@ -224,7 +231,7 @@ export default {
             PhoneNumber: this.phone,
             Email: this.email,
           });
-          window.localStorage.setItem("user", result.data);
+          window.localStorage.setItem("user", JSON.stringify(result.data));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);
