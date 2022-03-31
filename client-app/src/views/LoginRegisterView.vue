@@ -116,6 +116,7 @@
                       <v-col cols="6">
                         <v-text-field
                           v-model="username"
+                          :rules="[rules.required]"
                           label="Username"
                           required
                         ></v-text-field>
@@ -123,6 +124,7 @@
                       <v-col cols="6">
                         <v-text-field
                           v-model="phone"
+                          :rules="[rules.required]"
                           label="Phone"
                           required
                         ></v-text-field>

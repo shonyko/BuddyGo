@@ -316,7 +316,7 @@ export default {
     cancel() {
       this.editing = false;
       this.adding = false;
-      if (!this.currentIndex) return;
+      if (this.currentIndex == null) return;
       this.pets[this.currentIndex] = this.copyPet;
       this.copyPet = null;
       this.currentPet = null;
