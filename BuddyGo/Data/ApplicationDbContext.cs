@@ -7,6 +7,7 @@ namespace BuddyGo.Data {
             : base(options) {
         }
 
+        public DbSet<IncompleteUser> IncompleteUsers { get; set; }
         public DbSet<Owner> Owners { get; set; }
         public DbSet<Sitter> Sitters { get; set; }
         public DbSet<Pet> Pets { get; set; }
