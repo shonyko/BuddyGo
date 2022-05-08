@@ -1,5 +1,4 @@
-﻿using BuddyGo.DTOs.Pet;
-using BuddyGo.DTOs.User;
+﻿using BuddyGo.DTOs.User;
 
 namespace BuddyGo.DTOs.IncompleteUser {
     public class IncompleteUserDTO : UserDTO {

@@ -26,7 +26,7 @@ namespace BuddyGo.Controllers {
         [HttpPost]
         public async Task<IActionResult> CreatePet(PetCreateDTO petCreateDTO) {
             var pet = await _petService.CreatePet(petCreateDTO);
-            return CreatedAtRoute(nameof(GetPetById), new { Id = pet.Id }, pet);
+            return CreatedAtRoute(nameof(GetPetById), new { pet.Id }, pet);
         }
 
         [HttpDelete("{id}")]

@@ -3,9 +3,9 @@ using BuddyGo.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuddyGo.Repositories.Impl {
-    public class BaseRepository<T> where T : BaseModel {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly DbSet<T> _dbSet;
+    public abstract class BaseRepository<T> : IRepository<T> where T : BaseModel {
+        protected readonly ApplicationDbContext _dbContext;
+        protected readonly DbSet<T> _dbSet;
 
         public BaseRepository(ApplicationDbContext dbContext, DbSet<T> dbSet) {
             _dbContext = dbContext;

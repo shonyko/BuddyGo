@@ -23,6 +23,9 @@ builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();
 builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<IPetRepository, MySqlPetRepository>();
 builder.Services.AddScoped<IPetService, PetService>();
+builder.Services.AddScoped<IIncompleteUserRepository, MySqlIncompleteUserRepository>();
+builder.Services.AddScoped<IIncompleteUserService, IncompleteUserService>();
+builder.Services.AddScoped<IAccountFacade, AccountFacade>();
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

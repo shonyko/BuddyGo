@@ -18,5 +18,9 @@ namespace BuddyGo.Models {
             var data = (AuthData) obj;
             return (Username.Equals(data.Username)) && (Password.Equals(data.Password));
         }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(Id, Username, Password, Salt);
+        }
     }
 }
