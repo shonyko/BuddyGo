@@ -8,7 +8,11 @@ namespace BuddyGo.Maps {
     public class UserMap : Profile {
         public UserMap() {
             CreateMap<User, UserDTO>();
+            CreateMap<UserCreateDTO, UserLoginDTO>();
+
             CreateMap<UserLoginDTO, IncompleteUserLoginDTO>();
+            CreateMap<UserCreateDTO, IncompleteUserCreateDTO>();
+
             CreateMap<UserLoginDTO, OwnerLoginDTO>();
         }
     }

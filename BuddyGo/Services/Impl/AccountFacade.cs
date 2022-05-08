@@ -25,8 +25,10 @@ namespace BuddyGo.Services.Impl {
             return null;
         }
 
-        public Task<IncompleteUserDTO> Register(IncompleteUserCreateDTO user) {
-            throw new NotImplementedException();
-        }
+        public async Task<IncompleteUserDTO> Register(UserCreateDTO createDTO) {
+            var user = GetByLogin(_mapper.Map<UserCreateDTO, UserLoginDTO>(createDTO));
+            if (user != null) return null;
+            return await _incompleteUserService.Create(_mapper.Map<UserCreateDTO, IncompleteUserCreateDTO>(createDTO));
+        } 
     }
 }

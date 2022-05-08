@@ -207,7 +207,7 @@ export default {
           Password: this.loginPassword,
         };
         try {
-          var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/login`, {
+          var result = await axios.post(`${cfg.BACKEND_ADDR}/account/login`, {
             authData,
           });
           window.localStorage.setItem("user", JSON.stringify(result.data));
@@ -227,12 +227,15 @@ export default {
           Password: this.password,
         };
         try {
-          var result = await axios.post(`${cfg.BACKEND_ADDR}/owners/register`, {
-            authData,
-            Name: `${this.lastName} ${this.firstName}`,
-            PhoneNumber: this.phone,
-            Email: this.email,
-          });
+          var result = await axios.post(
+            `${cfg.BACKEND_ADDR}/account/register`,
+            {
+              authData,
+              Name: `${this.lastName} ${this.firstName}`,
+              PhoneNumber: this.phone,
+              Email: this.email,
+            }
+          );
           window.localStorage.setItem("user", JSON.stringify(result.data));
           this.$router.push({ name: "home" });
         } catch (e) {

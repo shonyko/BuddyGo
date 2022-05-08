@@ -12,6 +12,60 @@
     </v-navigation-drawer>
 
     <v-main>
+      <v-dialog
+        v-if="user ? user.incomplete : false"
+        v-model="incomplete.open"
+        persistent
+        max-width="600px"
+        min-width="360px"
+      >
+        <div>
+          <v-tabs
+            v-model="incomplete.tab"
+            show-arrows
+            background-color="deep-purple accent-4"
+            icons-and-text
+            dark
+            grow
+          >
+            <v-tabs-slider color="purple darken-4"></v-tabs-slider>
+            <v-tab v-for="i in incomplete.tabs" :key="i.name">
+              <v-icon large>{{ i.icon }}</v-icon>
+              <div class="caption py-1">{{ i.name }}</div>
+            </v-tab>
+            <v-tab-item>
+              <v-card class="px-4">
+                <v-card-text>
+                  <v-form>
+                    <v-row class="d-flex justify-space-around">
+                      <v-col class="d-flex" cols="12" sm="3" xsm="12">
+                        <v-btn
+                          x-large
+                          block
+                          color="success"
+                          @click="submitAccountType(cfg.ACC_TYPE_OWNER)"
+                        >
+                          Pet Owner!
+                        </v-btn>
+                      </v-col>
+                      <v-col class="d-flex" cols="12" sm="3" xsm="12">
+                        <v-btn
+                          x-large
+                          block
+                          color="success"
+                          @click="submitAccountType(cfg.ACC_TYPE_SITTER)"
+                        >
+                          Pet Sitter!
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs>
+        </div>
+      </v-dialog>
       <div class="card-wrapper">
         <v-card
           elevation="2"
@@ -265,6 +319,11 @@ export default {
   data: () => ({
     user: null,
     pets: [],
+    incomplete: {
+      tab: 0,
+      tabs: [{ name: "Choose your account type!", icon: "mdi-account" }],
+      open: true,
+    },
     tab: 0,
     tabs: [{ name: "Edit", icon: "mdi-account" }],
     add_tabs: [{ name: "Add", icon: "mdi-account" }],
@@ -281,6 +340,7 @@ export default {
     valid: true,
     alertVisible: false,
     alertMsg: "",
+    cfg,
   }),
   async mounted() {
     let user = JSON.parse(window.localStorage.getItem("user"));
@@ -290,12 +350,7 @@ export default {
       return;
     }
 
-    const result = await axios.get(`${cfg.BACKEND_ADDR}/owners/${user.id}`);
-    user = result.data;
-    window.localStorage.setItem("user", JSON.stringify(user));
-
-    this.user = user;
-    this.pets = user.pets;
+    await this.updateUser(user);
   },
   // computed: {
   //   currentPet() {
@@ -385,9 +440,22 @@ export default {
         setTimeout(() => (this.alertVisible = false), 2000);
       }
     },
-    updateUser(user) {
+    async updateUser(user) {
+      let controller;
+      if (user.incomplete) controller = "iusers";
+      if (user.owner) controller = "owners";
+
+      const result = await axios.get(
+        `${cfg.BACKEND_ADDR}/${controller}/${user.id}`
+      );
+      user = result.data;
+      window.localStorage.setItem("user", JSON.stringify(user));
+
       this.user = user;
-      this.pets = this.user.pets;
+      this.pets = user.pets;
+    },
+    async submitAccountType(type) {
+      console.log(type);
     },
   },
 };

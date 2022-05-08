@@ -26,7 +26,7 @@ namespace BuddyGo.Controllers {
         [HttpPost]
         public async Task<IActionResult> CreateOwner(OwnerCreateDTO ownerCreateDTO) {
             var owner = await _ownerService.CreateOwner(ownerCreateDTO);
-            return CreatedAtRoute(nameof(GetOwnerById), new { Id = owner.Id }, owner);
+            return CreatedAtRoute(nameof(GetOwnerById), new { owner.Id }, owner);
         }
 
         [HttpDelete("{id}")]
