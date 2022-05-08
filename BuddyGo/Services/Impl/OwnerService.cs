@@ -15,16 +15,17 @@ namespace BuddyGo.Services.Impl {
             _passwordEncryptor = passwordEncryptor;
         }
 
+        // TODO: De mutat password encryption in repo maybe
         public async Task<OwnerDTO> CreateOwner(OwnerCreateDTO owner) {
             var mappedOwner = _mapper.Map<Owner>(owner);
 
-            _passwordEncryptor.CreatePasswordHash(owner.AuthData.Password, out byte[] hash, out byte[] salt);
-            var authData = new AuthData {
-                Username = owner.AuthData.Username,
-                Password = System.Text.Encoding.UTF8.GetString(hash),
-                Salt = System.Text.Encoding.UTF8.GetString(salt)
-            };
-            mappedOwner.AuthData = authData;
+            //_passwordEncryptor.CreatePasswordHash(owner.AuthData.Password, out byte[] hash, out byte[] salt);
+            //var authData = new AuthData {
+            //    Username = owner.AuthData.Username,
+            //    Password = System.Text.Encoding.UTF8.GetString(hash),
+            //    Salt = System.Text.Encoding.UTF8.GetString(salt)
+            //};
+            //mappedOwner.AuthData = authData;
 
             await _repository.CreateOwner(mappedOwner);
             return _mapper.Map<OwnerDTO>(mappedOwner);
@@ -46,6 +47,12 @@ namespace BuddyGo.Services.Impl {
         public async Task<OwnerDTO> GetOwnerById(string id) {
             var owner = await _repository.GetOwnerById(id);
             return _mapper.Map<OwnerDTO>(owner);
+        }
+
+        public async Task<OwnerDTO> GetOwnerByLogin(OwnerLoginDTO ownerLoginDTO) {
+            var mappedOwner = _mapper.Map<Owner>(ownerLoginDTO);
+            var byLogin = await _repository.GetOwnerByLogin(mappedOwner);
+            return _mapper.Map<OwnerDTO>(byLogin);
         }
 
         public async Task<bool> UpdateOwner(string id, OwnerUpdateDTO owner) {

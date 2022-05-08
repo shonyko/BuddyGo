@@ -7,6 +7,16 @@ namespace BuddyGo.Models {
         [Required]
         public string Password { get; set; }
         [Required]
-        public string Salt { get; set; }
+        public string Salt { get; set; } = string.Empty;
+
+        public override bool Equals(Object obj) {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType())) {
+                return false;
+            }
+
+            var data = (AuthData) obj;
+            return (Username.Equals(data.Username)) && (Password.Equals(data.Password));
+        }
     }
 }

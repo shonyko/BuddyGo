@@ -14,6 +14,7 @@ namespace BuddyGo.Utils.Impl {
         public bool VerifyPassword(string password, byte[] hash, byte[] salt) {
             using (var hmac = new HMACSHA512(salt)) {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                Console.WriteLine($"PAROL: {System.Text.Encoding.UTF8.GetString(computedHash)}");
                 hmac.Dispose();
 
                 return computedHash.SequenceEqual(hash);

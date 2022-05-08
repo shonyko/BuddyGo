@@ -1,15 +1,27 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import LoginRegisterView from "../views/LoginRegisterView.vue";
+import HomeView from "@/views/HomeView.vue";
 
-Vue.use(Router)
+Vue.use(VueRouter);
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
-  ]
-})
+const routes = [
+  {
+    path: "/",
+    name: "login",
+    component: LoginRegisterView,
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: HomeView,
+  },
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
+});
+
+export default router;

@@ -31,21 +31,41 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(
+        builder => {
+            builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        }
+    );
+});
+
 var app = builder.Build();
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = "";
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 } else {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+app.UseCors();
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 //app.UseAuthentication();
 //app.UseAuthorization();
@@ -56,8 +76,5 @@ app.MapControllerRoute(
 );
 
 app.MapRazorPages();
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.Run();

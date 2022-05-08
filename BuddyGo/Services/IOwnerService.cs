@@ -5,6 +5,7 @@ namespace BuddyGo.Services {
         public Task<OwnerDTO> CreateOwner(OwnerCreateDTO owner);
 
         public Task<OwnerDTO> GetOwnerById(string id);
+        public Task<OwnerDTO> GetOwnerByLogin(OwnerLoginDTO ownerLoginDTO);
 
         public IEnumerable<OwnerDTO> GetAllOwners();
         public Task<bool> UpdateOwner(string id, OwnerUpdateDTO owner);
