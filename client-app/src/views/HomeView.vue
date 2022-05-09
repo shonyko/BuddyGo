@@ -443,7 +443,8 @@ export default {
     async updateUser(user) {
       let controller;
       if (user.incomplete) controller = "iusers";
-      if (user.owner) controller = "owners";
+      if (user.isOwner) controller = "owners";
+      if (user.isSitter) controller = "sitters";
 
       const result = await axios.get(
         `${cfg.BACKEND_ADDR}/${controller}/${user.id}`
@@ -455,7 +456,14 @@ export default {
       this.pets = user.pets;
     },
     async submitAccountType(type) {
-      console.log(type);
+      const result = await axios.post(`${cfg.BACKEND_ADDR}/account/type`, {
+        id: this.user.id,
+        type,
+      });
+
+      const user = result.data;
+      console.log(user);
+      await this.updateUser(user);
     },
   },
 };

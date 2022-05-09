@@ -7,6 +7,10 @@ namespace BuddyGo.Repositories.Impl {
         public GenericUserRepository(ApplicationDbContext dbContext, DbSet<T> dbSet) : base(dbContext, dbSet) {
         }
 
+        public async Task<T> GetByIdWithAuthData(string id) {
+            return await _dbSet.Include(x => x.AuthData).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<T> GetByLogin(T model) {
             if (model == null) throw new ArgumentNullException(nameof(model));
             var byLogin = await _dbSet

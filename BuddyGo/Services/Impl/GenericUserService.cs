@@ -8,6 +8,10 @@ namespace BuddyGo.Services.Impl {
             _repository = repository;
         }
 
+        public async Task<Model> GetByIdWithAuthData(string id) {
+           return await _repository.GetByIdWithAuthData(id);
+        }
+
         public async Task<ReadDTO> GetByLogin(LoginDTO model) {
             var mappedModel = _mapper.Map<LoginDTO, Model>(model);
             return _mapper.Map<Model, ReadDTO>(await _repository.GetByLogin(mappedModel));
