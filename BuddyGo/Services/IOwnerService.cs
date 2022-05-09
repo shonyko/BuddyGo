@@ -1,15 +1,16 @@
 ﻿using BuddyGo.DTOs.Owner;
+using BuddyGo.Models;
 
 namespace BuddyGo.Services {
-    public interface IOwnerService {
-        public Task<OwnerDTO> CreateOwner(OwnerCreateDTO owner);
+    public interface IOwnerService : IGenericUserService<Owner, OwnerDTO, OwnerCreateDTO, OwnerUpdateDTO, OwnerLoginDTO> {
+        //public Task<OwnerDTO> Create(OwnerCreateDTO owner);
 
-        public Task<OwnerDTO> GetOwnerById(string id);
-        public Task<OwnerDTO> GetOwnerByLogin(OwnerLoginDTO ownerLoginDTO);
+        //public Task<OwnerDTO> GetById(string id);
+        //public Task<OwnerDTO> GetByLogin(OwnerLoginDTO ownerLoginDTO);
 
-        public IEnumerable<OwnerDTO> GetAllOwners();
-        public Task<bool> UpdateOwner(string id, OwnerUpdateDTO owner);
+        //public IEnumerable<OwnerDTO> GetAll();
+        //public Task<bool> Update(string id, OwnerUpdateDTO owner);
 
-        public Task<bool> DeleteOwner(string id);
+        //public Task<bool> Delete(string id);
     }
 }

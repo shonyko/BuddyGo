@@ -19,7 +19,7 @@ namespace BuddyGo.Services.Impl {
             var incompleteUser = await _incompleteUserService.GetByLogin(_mapper.Map<IncompleteUserLoginDTO>(user));
             if (incompleteUser != null) return incompleteUser;
 
-            var owner = await _ownerService.GetOwnerByLogin(_mapper.Map<OwnerLoginDTO>(user));
+            var owner = await _ownerService.GetByLogin(_mapper.Map<OwnerLoginDTO>(user));
             if(owner != null) return owner;
 
             return null;
