@@ -3,6 +3,6 @@
 namespace BuddyGo.DTOs {
     public class BaseDTO {
         [Key]
-        public string Id { get; set; }
+        public string Id { get; set; }  = null!;
     }
 }

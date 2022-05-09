@@ -3,12 +3,12 @@
 namespace BuddyGo.Models {
     public class User : BaseModel {
         [Required]
-        public AuthData AuthData { get; set; }
+        public AuthData AuthData { get; set; } = null!;
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         [Required]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
     }
 }

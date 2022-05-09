@@ -3,8 +3,8 @@
 namespace BuddyGo.DTOs.User {
     public class AuthDataDTO {
         [Required]
-        public string Username { get; set; }
+        public string Username { get; set; } = null!;
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
     }
 }

@@ -3,13 +3,13 @@
 namespace BuddyGo.Models {
     public class AuthData : BaseModel {
         [Required]
-        public string Username { get; set; }
+        public string Username { get; set; } = null!;
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
         [Required]
         public string Salt { get; set; } = string.Empty;
 
-        public override bool Equals(Object obj) {
+        public override bool Equals(object? obj) {
             //Check for null and compare run-time types.
             if ((obj == null) || !this.GetType().Equals(obj.GetType())) {
                 return false;

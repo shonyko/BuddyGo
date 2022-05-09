@@ -3,6 +3,6 @@
 namespace BuddyGo.DTOs.User {
     public class UserLoginDTO {
         [Required]
-        public AuthDataDTO AuthData { get; set; }
+        public AuthDataDTO AuthData { get; set; } = null!;
     }
 }
