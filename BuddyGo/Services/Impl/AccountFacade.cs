@@ -25,8 +25,19 @@ namespace BuddyGo.Services.Impl {
             return null;
         }
 
+        private async Task<UserDTO> GetByUsername(UserLoginDTO user) {
+            var username = user.AuthData.Username;
+            var incompleteUser = await _incompleteUserService.GetByUsername(username);
+            if (incompleteUser != null) return incompleteUser;
+
+            var owner = await _ownerService.GetByUsername(username);
+            if (owner != null) return owner;
+
+            return null;
+        }
+
         public async Task<IncompleteUserDTO> Register(UserCreateDTO createDTO) {
-            var user = GetByLogin(_mapper.Map<UserCreateDTO, UserLoginDTO>(createDTO));
+            var user = await GetByUsername(_mapper.Map<UserCreateDTO, UserLoginDTO>(createDTO));
             if (user != null) return null;
             return await _incompleteUserService.Create(_mapper.Map<UserCreateDTO, IncompleteUserCreateDTO>(createDTO));
         } 

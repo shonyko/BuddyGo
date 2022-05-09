@@ -4,7 +4,6 @@ using BuddyGo.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BuddyGo.Controllers {
-    [ApiController]
     [Route("/iusers")]
     public class IncompleteUserController : BaseController<IncompleteUser, IncompleteUserDTO, IncompleteUserCreateDTO, IncompleteUserUpdateDTO> {
         private readonly IIncompleteUserService _incompleteUserService;

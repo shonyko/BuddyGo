@@ -25,7 +25,7 @@ namespace BuddyGo.Controllers {
         public async Task<IActionResult> Register(UserCreateDTO createDTO) {
             var user = await _accountFacade.Register(createDTO);
             if(user == null) return Conflict();
-            return CreatedAtRoute(nameof(Login), new { user.Id }, user);
+            return CreatedAtAction("GetById", nameof(IncompleteUserController), new { user.Id }, user);
         }
     }
 }

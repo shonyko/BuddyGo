@@ -19,12 +19,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
 });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IPasswordEncryptor, PasswordEncryptor>();
-builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();
-builder.Services.AddScoped<IOwnerService, OwnerService>();
 builder.Services.AddScoped<IPetRepository, MySqlPetRepository>();
 builder.Services.AddScoped<IPetService, PetService>();
+
 builder.Services.AddScoped<IIncompleteUserRepository, MySqlIncompleteUserRepository>();
 builder.Services.AddScoped<IIncompleteUserService, IncompleteUserService>();
+builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();
+builder.Services.AddScoped<IOwnerService, OwnerService>();
+builder.Services.AddScoped<ISitterRepository, MySqlSitterRepository>();
+builder.Services.AddScoped<ISitterService, SitterService>();
+
 builder.Services.AddScoped<IAccountFacade, AccountFacade>();
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

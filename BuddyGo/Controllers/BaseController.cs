@@ -16,7 +16,7 @@ namespace BuddyGo.Controllers {
             return Ok(_service.GetAll());
         }
 
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id) {
             var model = await _service.GetById(id);
             if (model == null) return NotFound();
@@ -26,7 +26,7 @@ namespace BuddyGo.Controllers {
         [HttpPost]
         public async Task<IActionResult> CreateIUser(CreateDTO createDTO) {
             var model = await _service.Create(createDTO);
-            return CreatedAtRoute(nameof(GetById), new { model.Id }, model);
+            return CreatedAtAction(nameof(GetById), this.GetType().FullName, new { model.Id }, model);
         }
 
         [HttpDelete("{id}")]
