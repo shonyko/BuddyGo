@@ -203,14 +203,15 @@ export default {
     async submitLogin() {
       if (this.$refs.loginForm.validate()) {
         const authData = {
-          Username: this.loginUsername,
-          Password: this.loginPassword,
+          username: this.loginUsername,
+          password: this.loginPassword,
         };
         try {
           var result = await axios.post(`${cfg.BACKEND_ADDR}/account/login`, {
             authData,
           });
           window.localStorage.setItem("user", JSON.stringify(result.data));
+          window.localStorage.setItem("authData", JSON.stringify(authData));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);
@@ -223,8 +224,8 @@ export default {
     async submitRegister() {
       if (this.$refs.registerForm.validate()) {
         const authData = {
-          Username: this.username,
-          Password: this.password,
+          username: this.username,
+          password: this.password,
         };
         try {
           var result = await axios.post(
@@ -237,6 +238,7 @@ export default {
             }
           );
           window.localStorage.setItem("user", JSON.stringify(result.data));
+          window.localStorage.setItem("authData", JSON.stringify(authData));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);

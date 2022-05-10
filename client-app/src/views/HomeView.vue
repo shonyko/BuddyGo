@@ -12,60 +12,15 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-dialog
+      <AccountTypeDialog
         v-if="user ? user.incomplete : false"
-        v-model="incomplete.open"
-        persistent
-        max-width="600px"
-        min-width="360px"
-      >
-        <div>
-          <v-tabs
-            v-model="incomplete.tab"
-            show-arrows
-            background-color="deep-purple accent-4"
-            icons-and-text
-            dark
-            grow
-          >
-            <v-tabs-slider color="purple darken-4"></v-tabs-slider>
-            <v-tab v-for="i in incomplete.tabs" :key="i.name">
-              <v-icon large>{{ i.icon }}</v-icon>
-              <div class="caption py-1">{{ i.name }}</div>
-            </v-tab>
-            <v-tab-item>
-              <v-card class="px-4">
-                <v-card-text>
-                  <v-form>
-                    <v-row class="d-flex justify-space-around">
-                      <v-col class="d-flex" cols="12" sm="3" xsm="12">
-                        <v-btn
-                          x-large
-                          block
-                          color="success"
-                          @click="submitAccountType(cfg.ACC_TYPE_OWNER)"
-                        >
-                          Pet Owner!
-                        </v-btn>
-                      </v-col>
-                      <v-col class="d-flex" cols="12" sm="3" xsm="12">
-                        <v-btn
-                          x-large
-                          block
-                          color="success"
-                          @click="submitAccountType(cfg.ACC_TYPE_SITTER)"
-                        >
-                          Pet Sitter!
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </v-tab-item>
-          </v-tabs>
-        </div>
-      </v-dialog>
+        @update-user="updateUser"
+      />
+      <UserProfile
+        v-if="user ? !user.incomplete : false"
+        :user="user"
+        @update-user="updateUser"
+      />
       <div class="card-wrapper">
         <v-card
           elevation="2"
@@ -313,17 +268,18 @@
 <script>
 import axios from "axios";
 import cfg from "@/config/config.js";
+import AccountTypeDialog from "@/components/AccountTypeDialog.vue";
+import UserProfile from "@/components/UserProfile.vue";
 
 export default {
   name: "HomeView",
+  components: {
+    AccountTypeDialog,
+    UserProfile,
+  },
   data: () => ({
     user: null,
     pets: [],
-    incomplete: {
-      tab: 0,
-      tabs: [{ name: "Choose your account type!", icon: "mdi-account" }],
-      open: true,
-    },
     tab: 0,
     tabs: [{ name: "Edit", icon: "mdi-account" }],
     add_tabs: [{ name: "Add", icon: "mdi-account" }],
@@ -360,6 +316,7 @@ export default {
   methods: {
     logout() {
       window.localStorage.setItem("user", JSON.stringify(null));
+      window.localStorage.setItem("authData", JSON.stringify(null));
       this.$router.push({ name: "login" });
     },
     edit(pet, i) {
@@ -454,16 +411,6 @@ export default {
 
       this.user = user;
       this.pets = user.pets;
-    },
-    async submitAccountType(type) {
-      const result = await axios.post(`${cfg.BACKEND_ADDR}/account/type`, {
-        id: this.user.id,
-        type,
-      });
-
-      const user = result.data;
-      console.log(user);
-      await this.updateUser(user);
     },
   },
 };

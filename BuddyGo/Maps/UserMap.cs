@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BuddyGo.DTOs.IncompleteUser;
 using BuddyGo.DTOs.Owner;
+using BuddyGo.DTOs.Sitter;
 using BuddyGo.DTOs.User;
 using BuddyGo.Models;
 
@@ -14,6 +15,8 @@ namespace BuddyGo.Maps {
             CreateMap<UserCreateDTO, IncompleteUserCreateDTO>();
 
             CreateMap<UserLoginDTO, OwnerLoginDTO>();
+
+            CreateMap<UserLoginDTO, SitterLoginDTO>();
         }
     }
 }
