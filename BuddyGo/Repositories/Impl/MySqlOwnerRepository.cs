@@ -1,8 +1,6 @@
 ﻿using BuddyGo.Data;
 using BuddyGo.Models;
 using BuddyGo.Utils;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace BuddyGo.Repositories.Impl {
     public class MySqlOwnerRepository : GenericUserRepository<Owner>, IOwnerRepository {
@@ -31,7 +29,7 @@ namespace BuddyGo.Repositories.Impl {
         //        .Include(o => o.AuthData)
         //        .Include(o => o.Pets)
         //        .FirstOrDefaultAsync(o => o.AuthData.Username.Equals(owner.AuthData.Username) && o.AuthData.Password.Equals(owner.AuthData.Password));
-            
+
         //    //var byLogin = users.FirstOrDefault(o => {
         //    //    //Console.WriteLine($"OUT: Username: {o.AuthData.Username} Password: {o.AuthData.Password}");
         //    //    //var hash = Encoding.UTF8.GetBytes(o.AuthData.Password);

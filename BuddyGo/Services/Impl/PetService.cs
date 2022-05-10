@@ -4,46 +4,46 @@ using BuddyGo.Models;
 using BuddyGo.Repositories;
 
 namespace BuddyGo.Services.Impl {
-    public class PetService : IPetService {
+    public class PetService : BaseService<Pet, PetDTO, PetCreateDTO, PetUpdateDTO>, IPetService {
         private readonly IPetRepository _repository;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
         
-        public PetService(IPetRepository repository, IMapper mapper) {
+        public PetService(IPetRepository repository, IMapper mapper) : base(repository, mapper) {
             _repository = repository;
-            _mapper = mapper;
+            //_mapper = mapper;
         }
 
-        public async Task<PetDTO> CreatePet(PetCreateDTO pet) {
-            var mappedPet = _mapper.Map<Pet>(pet);
+        //public async Task<PetDTO> Create(PetCreateDTO pet) {
+        //    var mappedPet = _mapper.Map<Pet>(pet);
 
-            await _repository.CreatePet(mappedPet);
-            return _mapper.Map<PetDTO>(mappedPet);
-        }
+        //    await _repository.Create(mappedPet);
+        //    return _mapper.Map<PetDTO>(mappedPet);
+        //}
 
-        public async Task<bool> DeletePet(string id) {
-            var pet = await _repository.GetPetById(id);
-            if (pet == null) return false;
+        //public async Task<bool> Delete(string id) {
+        //    var pet = await _repository.GetById(id);
+        //    if (pet == null) return false;
 
-            await _repository.DeletePet(pet);
-            return true;
-        }
+        //    await _repository.Delete(pet);
+        //    return true;
+        //}
 
-        public IEnumerable<PetDTO> GetAllPets() {
-            var pets = _repository.GetAllPets();
-            return _mapper.Map<List<PetDTO>>(pets);
-        }
+        //public IEnumerable<PetDTO> GetAll() {
+        //    var pets = _repository.GetAll();
+        //    return _mapper.Map<List<PetDTO>>(pets);
+        //}
 
-        public async Task<PetDTO> GetPetById(string id) {
-            var pet = await _repository.GetPetById(id);
-            return _mapper.Map<PetDTO>(pet);
-        }
+        //public async Task<PetDTO> GetById(string id) {
+        //    var pet = await _repository.GetById(id);
+        //    return _mapper.Map<PetDTO>(pet);
+        //}
 
-        public async Task<bool> UpdatePet(string id, PetUpdateDTO pet) {
-            var fromRepo = await _repository.GetPetById(id);
-            if (fromRepo == null) return false;
-            _mapper.Map(pet, fromRepo);
-            await _repository.UpdatePet(fromRepo);
-            return true;
-        }
+        //public async Task<bool> Update(string id, PetUpdateDTO pet) {
+        //    var fromRepo = await _repository.GetById(id);
+        //    if (fromRepo == null) return false;
+        //    _mapper.Map(pet, fromRepo);
+        //    await _repository.Update(fromRepo);
+        //    return true;
+        //}
     }
 }

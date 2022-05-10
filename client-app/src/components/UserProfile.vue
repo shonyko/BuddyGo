@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-form ref="form" @submit.prevent="submit">
+    <v-form ref="form" v-model="formIsValid" @submit.prevent="submit">
       <v-container fluid>
         <v-row>
           <v-col cols="12" sm="6">
@@ -55,7 +55,7 @@
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="userModel.phoneNumber"
-              :rules="rules.required"
+              :rules="rules.phone"
               color="purple darken-2"
               label="Phone Number"
               required
@@ -72,9 +72,13 @@
         </v-row>
       </v-container>
       <v-card-actions>
-        <v-btn text @click="resetForm"> Reset </v-btn>
+        <v-btn :disabled="!formIsValid" tile color="error" @click="resetForm">
+          <v-icon left> mdi-restore </v-icon>
+          Reset
+        </v-btn>
         <v-spacer></v-spacer>
-        <v-btn :disabled="!formIsValid" text color="primary" type="submit">
+        <v-btn :disabled="!formIsValid" tile color="success" type="submit">
+          <v-icon left> mdi-pencil </v-icon>
           Update
         </v-btn>
       </v-card-actions>
@@ -88,34 +92,35 @@ import cfg from "@/config/config.js";
 
 export default {
   props: ["user"],
-  data: () => ({
-    rules: {
-      name: [(val) => (val || "").length > 0 || "This field is required"],
-      email: [
-        (v) => !!v || "Required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
-    },
-    showPassword: false,
-    passwordRules: {
-      required: (value) => !!value || "Required.",
-      min: (v) => v.length >= 4 || "Min 4 characters",
-    },
-    userModel: { ...this.user },
-  }),
+  data() {
+    return {
+      rules: {
+        name: [(val) => (val || "").length > 0 || "This field is required"],
+        email: [
+          (v) => !!v || "Required",
+          (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+        ],
+        phone: [
+          (v) => !!v || "Required",
+          (v) =>
+            /[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}/.test(v) ||
+            "Phone number must be valid",
+        ],
+      },
+      showPassword: false,
+      formIsValid: true,
+      passwordRules: {
+        required: (value) => !!value || "Required.",
+        min: (v) => v.length >= 4 || "Min 4 characters",
+      },
+      userModel: { ...this.user },
+    };
+  },
   mounted() {
     console.log(this.userModel);
   },
 
   computed: {
-    formIsValid() {
-      return (
-        this.userModel.authData.password &&
-        this.userModel.name &&
-        this.userModel.email &&
-        this.userModel.phoneNumber
-      );
-    },
     accountType() {
       if (this.user.isSitter) return "Sitter";
       if (this.user.isOwner) return "Owner";

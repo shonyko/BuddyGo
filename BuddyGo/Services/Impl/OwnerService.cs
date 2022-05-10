@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BuddyGo.DTOs.Owner;
+using BuddyGo.DTOs.Pet;
 using BuddyGo.Models;
 using BuddyGo.Repositories;
 using BuddyGo.Utils;
@@ -7,12 +8,18 @@ using BuddyGo.Utils;
 namespace BuddyGo.Services.Impl {
     public class OwnerService : GenericUserService<Owner, OwnerDTO, OwnerCreateDTO, OwnerUpdateDTO, OwnerLoginDTO>, IOwnerService {
         private readonly IOwnerRepository _repository;
-        //private readonly IMapper _mapper;
+        private readonly IPetRepository _petRepository;
+        private readonly IMapper _mapper;
         //private readonly IPasswordEncryptor _passwordEncryptor;
-        public OwnerService(IOwnerRepository repository, IMapper mapper, IPasswordEncryptor passwordEncryptor) : base(repository, mapper) {
+        public OwnerService(IOwnerRepository repository, IPetRepository petRepository, IMapper mapper, IPasswordEncryptor passwordEncryptor) : base(repository, mapper) {
             _repository = repository;
-            //_mapper = mapper;
+            _petRepository = petRepository;
+            _mapper = mapper;
             //_passwordEncryptor = passwordEncryptor;
+        }
+
+        public async Task<List<PetDTO>> GetPets(string id) {
+            return _mapper.Map<List<Pet>, List<PetDTO>>(await _petRepository.GetAllByOwnerId(id));
         }
 
         //// TODO: De mutat password encryption in repo maybe

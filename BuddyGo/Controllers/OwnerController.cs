@@ -17,30 +17,35 @@ namespace BuddyGo.Controllers {
         }
 
         [HttpGet("{id}", Name = "GetOwnerById")]
-        public async Task<IActionResult> GetOwnerById(string id) {
+        public async Task<IActionResult> GetById(string id) {
             var owner = await _ownerService.GetById(id);
             if (owner == null) return NotFound();
             return Ok(owner);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOwner(OwnerCreateDTO ownerCreateDTO) {
+        public async Task<IActionResult> Create(OwnerCreateDTO ownerCreateDTO) {
             var owner = await _ownerService.Create(ownerCreateDTO);
-            return CreatedAtRoute(nameof(GetOwnerById), new { owner.Id }, owner);
+            return CreatedAtRoute(nameof(GetById), new { owner.Id }, owner);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOwner(string id) {
+        public async Task<IActionResult> Delete(string id) {
             var res = await _ownerService.Delete(id);
             if (!res) return NotFound();
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOwner(string id, OwnerUpdateDTO ownerUpdateDTO) {
+        public async Task<IActionResult> Update(string id, OwnerUpdateDTO ownerUpdateDTO) {
             var res = await _ownerService.Update(id, ownerUpdateDTO);
             if (!res) return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("{id}/pets")]
+        public async Task<IActionResult> GetPets(string id) {
+            return Ok(await _ownerService.GetPets(id));
         }
 
         //[HttpPost("login")]

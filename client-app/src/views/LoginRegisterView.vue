@@ -124,7 +124,7 @@
                       <v-col cols="6">
                         <v-text-field
                           v-model="phone"
-                          :rules="[rules.required]"
+                          :rules="phoneRules"
                           label="Phone"
                           required
                         ></v-text-field>
@@ -294,7 +294,12 @@ export default {
       (v) => !!v || "Required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
-
+    phoneRules: [
+      (v) => !!v || "Required",
+      (v) =>
+        /[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}/.test(v) ||
+        "Phone number must be valid",
+    ],
     show1: false,
     rules: {
       required: (value) => !!value || "Required.",

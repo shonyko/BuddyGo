@@ -1,4 +1,5 @@
 ﻿using BuddyGo.DTOs.Owner;
+using BuddyGo.DTOs.Pet;
 using BuddyGo.Models;
 
 namespace BuddyGo.Services {
@@ -12,5 +13,6 @@ namespace BuddyGo.Services {
         //public Task<bool> Update(string id, OwnerUpdateDTO owner);
 
         //public Task<bool> Delete(string id);
+        public Task<List<PetDTO>> GetPets(string id);
     }
 }
