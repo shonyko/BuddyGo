@@ -70,7 +70,7 @@ export default {
 
       const user = result.data;
       console.log(user);
-      this.$emit("updateUser", user);
+      this.$emit("update-user", user);
     },
   },
 };

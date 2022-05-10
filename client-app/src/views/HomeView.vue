@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer app class="pt-4" color="grey lighten-3" mini-variant>
+    <v-navigation-drawer app color="grey lighten-2" mini-variant permanent>
       <v-avatar
         v-for="n in 6"
         :key="n"
@@ -8,7 +8,22 @@
         :size="n === 1 ? 36 : 20"
         class="d-block text-center mx-auto mb-9"
       ></v-avatar>
-      <v-btn outlined color="red" small fab @click="logout">Exit</v-btn>
+      <v-tooltip right color="primary">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="red"
+            small
+            fab
+            outlined
+            v-bind="attrs"
+            v-on="on"
+            @click="logout"
+          >
+            <v-icon>mdi-exit-to-app</v-icon>
+          </v-btn>
+        </template>
+        <span>Log Out!</span>
+      </v-tooltip>
     </v-navigation-drawer>
 
     <v-main>
@@ -316,7 +331,6 @@ export default {
   methods: {
     logout() {
       window.localStorage.setItem("user", JSON.stringify(null));
-      window.localStorage.setItem("authData", JSON.stringify(null));
       this.$router.push({ name: "login" });
     },
     edit(pet, i) {
@@ -406,8 +420,11 @@ export default {
       const result = await axios.get(
         `${cfg.BACKEND_ADDR}/${controller}/${user.id}`
       );
-      user = result.data;
-      window.localStorage.setItem("user", JSON.stringify(user));
+      // user = result.data;
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({ authData: user.authData, ...result.data })
+      );
 
       this.user = user;
       this.pets = user.pets;
@@ -417,10 +434,22 @@ export default {
 </script>
 
 <style>
+/* .v-navigation-drawer {
+  border: 10px solid red;
+} */
+
 .v-navigation-drawer__content {
   display: flex;
   flex-direction: column;
 }
+
+.v-navigation-drawer__content > *:first-child {
+  margin-top: 1rem;
+  /* margin-bottom: 15px; */
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .v-navigation-drawer__content > *:last-child {
   margin-top: auto;
   margin-bottom: 15px;

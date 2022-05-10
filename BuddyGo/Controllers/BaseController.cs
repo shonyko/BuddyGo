@@ -24,21 +24,21 @@ namespace BuddyGo.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateIUser(CreateDTO createDTO) {
+        public async Task<IActionResult> Create(CreateDTO createDTO) {
             var model = await _service.Create(createDTO);
             return CreatedAtAction(nameof(GetById), this.GetType().FullName, new { model.Id }, model);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOwner(string id) {
+        public async Task<IActionResult> Delete(string id) {
             var res = await _service.Delete(id);
             if (!res) return NotFound();
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOwner(string id, UpdateDTO ownerUpdateDTO) {
-            var res = await _service.Update(id, ownerUpdateDTO);
+        public async Task<IActionResult> Update(string id, UpdateDTO updateDTO) {
+            var res = await _service.Update(id, updateDTO);
             if (!res) return NotFound();
             return NoContent();
         }

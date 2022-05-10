@@ -210,8 +210,12 @@ export default {
           var result = await axios.post(`${cfg.BACKEND_ADDR}/account/login`, {
             authData,
           });
-          window.localStorage.setItem("user", JSON.stringify(result.data));
-          window.localStorage.setItem("authData", JSON.stringify(authData));
+          window.localStorage.setItem(
+            "user",
+            JSON.stringify({ authData, ...result.data })
+          );
+          // window.localStorage.setItem("user", JSON.stringify(result.data));
+          // window.localStorage.setItem("authData", JSON.stringify(authData));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);
@@ -237,8 +241,11 @@ export default {
               Email: this.email,
             }
           );
-          window.localStorage.setItem("user", JSON.stringify(result.data));
-          window.localStorage.setItem("authData", JSON.stringify(authData));
+          window.localStorage.setItem(
+            "user",
+            JSON.stringify({ authData, ...result.data })
+          );
+          // window.localStorage.setItem("authData", JSON.stringify(authData));
           this.$router.push({ name: "home" });
         } catch (e) {
           console.log(e);
