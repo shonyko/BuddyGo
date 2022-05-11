@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BuddyGo.DTOs.Announcement;
 using BuddyGo.DTOs.Owner;
 using BuddyGo.DTOs.Pet;
 using BuddyGo.Models;
@@ -9,13 +10,19 @@ namespace BuddyGo.Services.Impl {
     public class OwnerService : GenericUserService<Owner, OwnerDTO, OwnerCreateDTO, OwnerUpdateDTO, OwnerLoginDTO>, IOwnerService {
         private readonly IOwnerRepository _repository;
         private readonly IPetRepository _petRepository;
-        private readonly IMapper _mapper;
+        private readonly IAnnouncementRepository _announcementRepository;
+        //private readonly IMapper _mapper;
         //private readonly IPasswordEncryptor _passwordEncryptor;
-        public OwnerService(IOwnerRepository repository, IPetRepository petRepository, IMapper mapper, IPasswordEncryptor passwordEncryptor) : base(repository, mapper) {
+        public OwnerService(IOwnerRepository repository, IPetRepository petRepository, IAnnouncementRepository announcementRepository, IMapper mapper) : base(repository, mapper) {
             _repository = repository;
             _petRepository = petRepository;
-            _mapper = mapper;
+            _announcementRepository = announcementRepository;
+            //_mapper = mapper;
             //_passwordEncryptor = passwordEncryptor;
+        }
+
+        public async Task<List<AnnouncementDTO>> GetAnnouncements(string id) {
+            return _mapper.Map<List<Announcement>, List<AnnouncementDTO>>(await _announcementRepository.GetAllByOwnerId(id));
         }
 
         public async Task<List<PetDTO>> GetPets(string id) {

@@ -1,4 +1,5 @@
-﻿using BuddyGo.DTOs.Owner;
+﻿using BuddyGo.DTOs.Announcement;
+using BuddyGo.DTOs.Owner;
 using BuddyGo.DTOs.Pet;
 using BuddyGo.Models;
 
@@ -14,5 +15,6 @@ namespace BuddyGo.Services {
 
         //public Task<bool> Delete(string id);
         public Task<List<PetDTO>> GetPets(string id);
+        public Task<List<AnnouncementDTO>> GetAnnouncements(string id);
     }
 }

@@ -62,6 +62,7 @@
                           hint="At least 8 characters"
                           counter
                           @click:append="show1 = !show1"
+                          @keyup.enter="submitLogin"
                         ></v-text-field>
                       </v-col>
                       <v-col class="d-flex" cols="12" sm="6" xsm="12"> </v-col>
@@ -153,6 +154,7 @@
                           label="Confirm Password"
                           counter
                           @click:append="show1 = !show1"
+                          @keyup.enter="submitLogin"
                         ></v-text-field>
                       </v-col>
                       <v-spacer></v-spacer>

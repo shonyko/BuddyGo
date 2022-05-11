@@ -13,19 +13,14 @@
           class="d-flex align-center justify-center flex-column ma-0"
         >
           <v-list-item
-            v-for="(tab, i) in tabs"
+            v-for="(tab, i) in validTabs"
             :key="i"
             class="nav-item pl-0 pr-0 d-flex align-center justify-center"
             @click="setActiveTab(i)"
           >
             <!-- :color="`grey ${i === 0 ? 'darken' : 'lighten'}-1`"
                 :size="i === 0 ? 36 : 20" -->
-            <v-tooltip
-              v-if="tab.validate(user)"
-              right
-              color="primary"
-              class="ml-1"
-            >
+            <v-tooltip right color="primary" class="ml-1">
               <template v-slot:activator="{ on, attrs }">
                 <v-icon
                   v-on="on"
@@ -111,6 +106,7 @@ import cfg from "@/config/config.js";
 import AccountTypeDialog from "@/components/AccountTypeDialog.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import ManagePets from "@/components/ManagePets.vue";
+import ManageAnnouncements from "@/components/ManageAnnouncements.vue";
 
 export default {
   name: "HomeView",
@@ -118,6 +114,7 @@ export default {
     AccountTypeDialog,
     UserProfile,
     ManagePets,
+    ManageAnnouncements,
   },
   data: () => ({
     user: null,
@@ -133,6 +130,12 @@ export default {
         icon: "mdi-paw",
         name: "ManagePets",
         tooltip: "Manage your pets",
+        validate: (user) => user?.isOwner,
+      },
+      {
+        icon: "mdi-notebook",
+        name: "ManageAnnouncements",
+        tooltip: "Manage your announcements",
         validate: (user) => user?.isOwner,
       },
     ],
@@ -159,6 +162,9 @@ export default {
     },
     currentTab() {
       return this.tabs[this.tabId].name;
+    },
+    validTabs() {
+      return this.tabs.filter((x) => x.validate(this.user));
     },
   },
   methods: {

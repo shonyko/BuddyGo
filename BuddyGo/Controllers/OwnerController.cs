@@ -48,6 +48,11 @@ namespace BuddyGo.Controllers {
             return Ok(await _ownerService.GetPets(id));
         }
 
+        [HttpGet("{id}/announcements")]
+        public async Task<IActionResult> GetAnnouncements(string id) {
+            return Ok(await _ownerService.GetAnnouncements(id));
+        }
+
         //[HttpPost("login")]
         //public async Task<IActionResult> GetOwnerByLogin(OwnerLoginDTO ownerLoginDTO) {
         //    var owner = await _ownerService.GetByLogin(ownerLoginDTO);

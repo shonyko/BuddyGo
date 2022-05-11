@@ -22,6 +22,9 @@ builder.Services.AddScoped<IPasswordEncryptor, PasswordEncryptor>();
 builder.Services.AddScoped<IPetRepository, MySqlPetRepository>();
 builder.Services.AddScoped<IPetService, PetService>();
 
+builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+
 builder.Services.AddScoped<IIncompleteUserRepository, MySqlIncompleteUserRepository>();
 builder.Services.AddScoped<IIncompleteUserService, IncompleteUserService>();
 builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();
