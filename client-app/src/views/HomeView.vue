@@ -63,7 +63,11 @@
 
     <v-main>
       <template v-if="user">
-        <AccountTypeDialog v-if="incompleteUser" @update-user="updateUser" />
+        <AccountTypeDialog
+          v-if="incompleteUser"
+          :user="user"
+          @update-user="updateUser"
+        />
         <component
           :is="currentTab"
           v-else
@@ -73,7 +77,7 @@
         <!-- <UserProfile v-else :user="user" @update-user="updateUser" /> -->
       </template>
       <template v-else>
-        <div class="text-center">
+        <div class="loading-center">
           <v-progress-circular
             indeterminate
             color="primary"
@@ -238,5 +242,13 @@ export default {
 
 .theme--light.v-list-item.v-list-item--active {
   color: hotpink;
+}
+
+.loading-center {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -54,6 +54,7 @@ import axios from "axios";
 import cfg from "@/config/config.js";
 
 export default {
+  props: ["user"],
   name: "AccountTypeDialog",
   data: () => ({
     cfg,
@@ -68,7 +69,7 @@ export default {
         type,
       });
 
-      const user = result.data;
+      const user = { authData: this.user.authData, ...result.data };
       console.log(user);
       this.$emit("update-user", user);
     },
