@@ -32,6 +32,7 @@
                       <DateTimePicker
                         label="From"
                         v-model="newAnnouncement.startDate"
+                        :disabled="hasSitter"
                       >
                         <template v-slot:dateIcon
                           ><v-icon>mdi-calendar</v-icon></template
@@ -45,6 +46,7 @@
                       <DateTimePicker
                         label="To"
                         v-model="newAnnouncement.endDate"
+                        :disabled="hasSitter"
                       >
                         <template v-slot:dateIcon
                           ><v-icon>mdi-calendar</v-icon></template
@@ -60,6 +62,7 @@
                         :rules="[rules.required]"
                         label="Title"
                         required
+                        :readonly="hasSitter"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="4">
@@ -70,13 +73,15 @@
                         :rules="rules.text"
                         label="Pets"
                         required
+                        :readonly="hasSitter"
                       ></v-select>
                     </v-col>
                     <v-col cols="12">
                       <v-textarea
                         v-model="newAnnouncement.description"
                         color="teal"
-                        clearable
+                        :clearable="!hasSitter"
+                        :readonly="hasSitter"
                       >
                         <template v-slot:label>
                           <div>Description <small>(optional)</small></div>
@@ -195,8 +200,12 @@
                 <v-col cols="8">
                   <v-card-title>
                     <div>
-                      <div class="text-h5">{{ acceptedSitter.name }}</div>
-                      <div>{{ acceptedSitter.description }}</div>
+                      <div class="text-h5">
+                        {{ acceptedSitter ? acceptedSitter.name : "" }}
+                      </div>
+                      <div>
+                        {{ acceptedSitter ? acceptedSitter.description : "" }}
+                      </div>
                     </div>
                   </v-card-title>
                 </v-col>
