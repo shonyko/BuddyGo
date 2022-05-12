@@ -169,20 +169,16 @@ export default {
   },
   methods: {
     init() {
-      if (!this.datetime) {
-        return;
-      }
       let initDateTime;
-      if (this.datetime instanceof Date) {
-        initDateTime = this.datetime;
-      } else if (
-        typeof this.datetime === "string" ||
-        this.datetime instanceof String
-      ) {
+      if (!this.datetime || this.datetime == "") {
+        initDateTime = moment().format();
+      } else {
         initDateTime = moment(this.datetime).format();
       }
+
       this.date = moment(initDateTime).format(DEFAULT_DATE_FORMAT);
       this.time = moment(initDateTime).format(DEFAULT_TIME_FORMAT);
+      this.$emit("input", this.selectedDatetime);
     },
     okHandler() {
       this.resetPicker();
@@ -192,7 +188,7 @@ export default {
       this.resetPicker();
       this.date = DEFAULT_DATE;
       this.time = DEFAULT_TIME;
-      this.$emit("input", null);
+      this.$emit("input", this.selectedDatetime);
     },
     resetPicker() {
       this.display = false;

@@ -1,80 +1,55 @@
 <template>
   <v-app>
     <div class="card-wrapper">
-      <v-card
-        elevation="2"
-        max-width="344"
-        outlined
-        v-for="pet in pets"
-        :key="pet.id"
-      >
-        <v-list-item three-line>
-          <v-list-item-content>
-            <div class="text-overline mb-4">
-              {{
-                `${pet.sex == "M" ? "Male" : "Female"}, ${pet.age}, ${
-                  pet.weight
-                }kg`
-              }}
-            </div>
-            <v-list-item-title class="text-h5 mb-1">
-              {{ pet.name }}
-            </v-list-item-title>
-            <v-list-item-subtitle>{{ pet.description }}</v-list-item-subtitle>
-          </v-list-item-content>
+      <v-hover v-for="a in announcements" :key="a.id">
+        <template v-slot:default="{ hover }">
+          <v-card max-width="344">
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
+            ></v-img>
 
-          <v-list-item-avatar tile size="80" color="grey"
-            ><img
-              src="https://p1-tt-ipv6.byteimg.com/origin/pgc-image/f6a0dd2ce1c943ae993d716767184ca1.jpg"
-          /></v-list-item-avatar>
-        </v-list-item>
+            <v-card-text>
+              <h2 class="text-h6 primary--text">{{ a.title }}</h2>
+              {{ a.description }}
+            </v-card-text>
 
-        <v-card-actions class="float-right">
-          <v-tooltip bottom color="primary">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="red"
-                small
-                fab
-                outlined
-                rounded
-                v-bind="attrs"
-                v-on="on"
-                @click="remove(pet)"
-              >
-                <v-icon>mdi-trash-can</v-icon>
-              </v-btn>
-            </template>
-            <span>Delete pet!</span>
-          </v-tooltip>
-          <v-tooltip bottom color="primary">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="amber"
-                small
-                fab
-                outlined
-                rounded
-                v-bind="attrs"
-                v-on="on"
-                class="ml-1"
-                @click="
-                  selectedPet = pet;
-                  editPet = true;
-                "
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-            </template>
-            <span>Update pet!</span>
-          </v-tooltip>
-        </v-card-actions>
-      </v-card>
+            <v-card-title>
+              <!-- <v-rating
+                :value="4"
+                dense
+                color="orange"
+                background-color="orange"
+                hover
+                class="mr-2"
+              ></v-rating> -->
+              <span class="font-italic text-subtitle-2">
+                {{ moment(a.startDate).format("YYYY-MM-DD HH:mm") }}
+                <span class="font-weight-light mx-2">to</span>
+                {{ moment(a.endDate).format("YYYY-MM-DD HH:mm") }}
+              </span>
+            </v-card-title>
+
+            <v-fade-transition>
+              <v-overlay v-if="hover" absolute color="#036358">
+                <v-btn @click="seeDetails(a)">See more info</v-btn>
+              </v-overlay>
+            </v-fade-transition>
+          </v-card>
+        </template>
+      </v-hover>
     </div>
     <AddAnnouncementDialog
       v-if="addAnnouncement"
       :user="user"
       @submit-add="add"
+    />
+    <AnnouncementDetailsDialog
+      v-if="seeAnnouncementDetails"
+      :user="user"
+      :announcement="selectedAnnouncement"
+      @close="seeAnnouncementDetails = false"
+      @submit-update="update"
+      @submit-remove="remove"
     />
     <v-tooltip top color="primary">
       <template v-slot:activator="{ on, attrs }">
@@ -96,48 +71,35 @@
     <v-alert v-show="alertVisible" :type="alertType" dismissible>
       {{ alertMsg }}
     </v-alert>
-    <!-- <DateTimePicker label="Select Datetime" v-model="datetime">
-      <template v-slot:dateIcon><v-icon>mdi-calendar</v-icon></template>
-      <template v-slot:timeIcon><v-icon>mdi-clock</v-icon></template>
-    </DateTimePicker> -->
   </v-app>
 </template>
 
 <script>
-// import DateTimePicker from "./DateTimePicker.vue";
-// export default {
-//   components: { DateTimePicker },
-//   data() {
-//     return {
-//       datetime: "",
-//     };
-//   },
-//   mounted() {
-//     console.log(this.datetime);
-//   },
-//   methods: {},
-// };
 import axios from "axios";
 import cfg from "@/config/config.js";
+import moment from "moment";
 import AddAnnouncementDialog from "./AddAnnouncementDialog.vue";
+import AnnouncementDetailsDialog from "./AnnouncementDetailsDialog.vue";
 
 export default {
   components: {
     AddAnnouncementDialog,
+    AnnouncementDetailsDialog,
   },
   props: ["user"],
   data() {
     return {
-      pets: [],
       announcements: [],
       tab: 0,
       edit_tabs: [{ name: "Edit", icon: "mdi-account" }],
       addAnnouncement: false,
       //   editAnnouncement: false,
-      //   selectedAnnouncement: null,
       alertVisible: false,
       alertType: "error",
       alertMsg: "",
+      moment: moment,
+      seeAnnouncementDetails: false,
+      selectedAnnouncement: null,
     };
   },
   async mounted() {
@@ -167,16 +129,16 @@ export default {
         this.alert("Oops! A aparut o eroare!", "error");
       }
     },
-    async edit(pet) {
-      if (pet == null) {
-        this.editPet = false;
+    async update(a) {
+      if (a == null) {
+        this.seeAnnouncementDetails = false;
         return;
       }
 
       try {
-        await axios.put(`${cfg.BACKEND_ADDR}/pets/${pet.id}`, pet);
-        await this.updatePets();
-        this.editPet = false;
+        await axios.put(`${cfg.BACKEND_ADDR}/announcements/${a.id}`, a);
+        this.seeAnnouncementDetails = false;
+        await this.updateList();
         this.alert("Modificat cu succes!", "success");
       } catch (e) {
         console.log(e);
@@ -192,6 +154,7 @@ export default {
         await axios.delete(
           `${cfg.BACKEND_ADDR}/announcements/${announcement.id}`
         );
+        this.seeAnnouncementDetails = false;
         await this.updateList();
         this.alert("Sters cu succes!", "success");
       } catch (e) {
@@ -204,6 +167,10 @@ export default {
       this.alertType = type;
       this.alertVisible = true;
       setTimeout(() => (this.alertVisible = false), 2000);
+    },
+    seeDetails(a) {
+      this.selectedAnnouncement = a;
+      this.seeAnnouncementDetails = true;
     },
   },
 };
