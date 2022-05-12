@@ -3,6 +3,7 @@ using System;
 using BuddyGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuddyGo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220512014711_Offer")]
+    partial class Offer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,12 +33,6 @@ namespace BuddyGo.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("OfferId")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OfferId1")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -53,8 +49,6 @@ namespace BuddyGo.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OfferId1");
 
                     b.HasIndex("OwnerId");
 
@@ -120,14 +114,6 @@ namespace BuddyGo.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("AnnouncementId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SitterId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -237,10 +223,6 @@ namespace BuddyGo.Migrations
 
             modelBuilder.Entity("BuddyGo.Models.Announcement", b =>
                 {
-                    b.HasOne("BuddyGo.Models.Offer", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId1");
-
                     b.HasOne("BuddyGo.Models.Owner", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
@@ -252,8 +234,6 @@ namespace BuddyGo.Migrations
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Offer");
 
                     b.Navigation("Owner");
 

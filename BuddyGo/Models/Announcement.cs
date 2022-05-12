@@ -9,5 +9,8 @@ namespace BuddyGo.Models {
         public Owner Owner { get; set; } = null!;
         public string PetId { get; set; } = null!;
         public Pet Pet { get; set; } = null!;
+
+        public string? OfferId { get; set; } = null!;
+        public Offer? Offer { get; set; } = null!;
     }
 }

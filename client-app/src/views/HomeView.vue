@@ -107,6 +107,7 @@ import AccountTypeDialog from "@/components/AccountTypeDialog.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import ManagePets from "@/components/ManagePets.vue";
 import ManageAnnouncements from "@/components/ManageAnnouncements.vue";
+import ExploreAnnouncements from "@/components/ExploreAnnouncements.vue";
 
 export default {
   name: "HomeView",
@@ -115,6 +116,7 @@ export default {
     UserProfile,
     ManagePets,
     ManageAnnouncements,
+    ExploreAnnouncements,
   },
   data: () => ({
     user: null,
@@ -137,6 +139,12 @@ export default {
         name: "ManageAnnouncements",
         tooltip: "Manage your announcements",
         validate: (user) => user?.isOwner,
+      },
+      {
+        icon: "mdi-antenna",
+        name: "ExploreAnnouncements",
+        tooltip: "Explore announcements",
+        validate: (user) => user?.isSitter,
       },
     ],
     rules: {
@@ -161,7 +169,7 @@ export default {
       return this.user.incomplete;
     },
     currentTab() {
-      return this.tabs[this.tabId].name;
+      return this.validTabs[this.tabId].name;
     },
     validTabs() {
       return this.tabs.filter((x) => x.validate(this.user));
@@ -191,7 +199,7 @@ export default {
       this.pets = user.pets;
     },
     setActiveTab(index) {
-      this.tabId = this.tabs[index].name;
+      this.tabId = this.validTabs[index].name;
     },
   },
 };

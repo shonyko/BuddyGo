@@ -25,6 +25,9 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
 
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IOfferService, OfferService>();
+
 builder.Services.AddScoped<IIncompleteUserRepository, MySqlIncompleteUserRepository>();
 builder.Services.AddScoped<IIncompleteUserService, IncompleteUserService>();
 builder.Services.AddScoped<IOwnerRepository, MySqlOwnerRepository>();

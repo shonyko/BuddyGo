@@ -50,6 +50,7 @@
       @close="seeAnnouncementDetails = false"
       @submit-update="update"
       @submit-remove="remove"
+      @accept="accept"
     />
     <v-tooltip top color="primary">
       <template v-slot:activator="{ on, attrs }">
@@ -171,6 +172,28 @@ export default {
     seeDetails(a) {
       this.selectedAnnouncement = a;
       this.seeAnnouncementDetails = true;
+    },
+    async accept(offer) {
+      if (offer == null) {
+        this.showProfile = false;
+        return;
+      }
+
+      try {
+        let payload = {
+          ...this.selectedAnnouncement,
+        };
+        payload.offerId = offer.id;
+        await axios.put(
+          `${cfg.BACKEND_ADDR}/announcements/${this.selectedAnnouncement.id}`,
+          payload
+        );
+        this.seeAnnouncementDetails = false;
+        this.alert("Adaugat cu succes!", "success");
+      } catch (e) {
+        console.log(e);
+        this.alert("Oops! A aparut o eroare!", "error");
+      }
     },
   },
 };

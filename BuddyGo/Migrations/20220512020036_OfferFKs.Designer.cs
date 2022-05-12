@@ -3,6 +3,7 @@ using System;
 using BuddyGo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuddyGo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220512020036_OfferFKs")]
+    partial class OfferFKs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,6 @@ namespace BuddyGo.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("OfferId")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("OfferId1")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("OwnerId")
@@ -54,7 +53,7 @@ namespace BuddyGo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OfferId1");
+                    b.HasIndex("OfferId");
 
                     b.HasIndex("OwnerId");
 
@@ -120,14 +119,6 @@ namespace BuddyGo.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("AnnouncementId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SitterId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -239,7 +230,7 @@ namespace BuddyGo.Migrations
                 {
                     b.HasOne("BuddyGo.Models.Offer", "Offer")
                         .WithMany()
-                        .HasForeignKey("OfferId1");
+                        .HasForeignKey("OfferId");
 
                     b.HasOne("BuddyGo.Models.Owner", "Owner")
                         .WithMany()

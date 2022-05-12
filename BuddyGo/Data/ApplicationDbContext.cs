@@ -12,5 +12,6 @@ namespace BuddyGo.Data {
         public DbSet<Sitter> Sitters { get; set; } = null!;
         public DbSet<Pet> Pets { get; set; } = null!;
         public DbSet<Announcement> Announcements { get; set; } = null!;
+        public DbSet<Offer> Offers { get; set; } = null!;
     }
 }

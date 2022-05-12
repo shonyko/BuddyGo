@@ -1,210 +1,250 @@
 <template>
-  <v-dialog
-    v-model="active"
-    persistent
-    max-width="600px"
-    min-width="360px"
-    scrollable
-    @click:outside="cancel"
-    @keydown.esc="cancel"
-  >
-    <div>
-      <v-tabs
-        v-model="tab"
-        show-arrows
-        background-color="deep-purple accent-4"
-        icons-and-text
-        dark
-        grow
-      >
-        <v-tabs-slider color="purple darken-4"></v-tabs-slider>
-        <v-tab v-for="i in tabs" :key="i.name">
-          <v-icon large>{{ i.icon }}</v-icon>
-          <div class="caption py-1">{{ i.name }}</div>
-        </v-tab>
-        <v-tab-item>
-          <v-card class="px-4">
-            <v-card-text>
-              <v-form ref="addForm" v-model="valid" @submit.prevent="submit">
-                <v-row>
-                  <v-col cols="6" sm="6" md="6">
-                    <DateTimePicker
-                      label="From"
-                      v-model="newAnnouncement.startDate"
-                    >
-                      <template v-slot:dateIcon
-                        ><v-icon>mdi-calendar</v-icon></template
+  <v-app>
+    <v-dialog
+      v-model="active"
+      persistent
+      max-width="600px"
+      min-width="360px"
+      scrollable
+      @click:outside="cancel"
+      @keydown.esc="cancel"
+    >
+      <div>
+        <v-tabs
+          v-model="tab"
+          show-arrows
+          background-color="deep-purple accent-4"
+          icons-and-text
+          dark
+          grow
+        >
+          <v-tabs-slider color="purple darken-4"></v-tabs-slider>
+          <v-tab v-for="i in tabs" :key="i.name">
+            <v-icon large>{{ i.icon }}</v-icon>
+            <div class="caption py-1">{{ i.name }}</div>
+          </v-tab>
+          <v-tab-item>
+            <v-card class="px-4">
+              <v-card-text>
+                <v-form ref="addForm" v-model="valid" @submit.prevent="submit">
+                  <v-row>
+                    <v-col cols="6" sm="6" md="6">
+                      <DateTimePicker
+                        label="From"
+                        v-model="newAnnouncement.startDate"
                       >
-                      <template v-slot:timeIcon
-                        ><v-icon>mdi-clock</v-icon></template
+                        <template v-slot:dateIcon
+                          ><v-icon>mdi-calendar</v-icon></template
+                        >
+                        <template v-slot:timeIcon
+                          ><v-icon>mdi-clock</v-icon></template
+                        >
+                      </DateTimePicker>
+                    </v-col>
+                    <v-col cols="6" sm="6" md="6">
+                      <DateTimePicker
+                        label="To"
+                        v-model="newAnnouncement.endDate"
                       >
-                    </DateTimePicker>
-                  </v-col>
-                  <v-col cols="6" sm="6" md="6">
-                    <DateTimePicker
-                      label="To"
-                      v-model="newAnnouncement.endDate"
-                    >
-                      <template v-slot:dateIcon
-                        ><v-icon>mdi-calendar</v-icon></template
+                        <template v-slot:dateIcon
+                          ><v-icon>mdi-calendar</v-icon></template
+                        >
+                        <template v-slot:timeIcon
+                          ><v-icon>mdi-clock</v-icon></template
+                        >
+                      </DateTimePicker>
+                    </v-col>
+                    <v-col cols="8">
+                      <v-text-field
+                        v-model="newAnnouncement.title"
+                        :rules="[rules.required]"
+                        label="Title"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="4">
+                      <v-select
+                        v-model="newAnnouncement.petId"
+                        :items="pets"
+                        :loading="selectLoading"
+                        :rules="rules.text"
+                        label="Pets"
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-textarea
+                        v-model="newAnnouncement.description"
+                        color="teal"
+                        clearable
                       >
-                      <template v-slot:timeIcon
-                        ><v-icon>mdi-clock</v-icon></template
+                        <template v-slot:label>
+                          <div>Description <small>(optional)</small></div>
+                        </template>
+                      </v-textarea>
+                    </v-col>
+                    <v-col class="d-flex" cols="12" sm="3" xsm="12">
+                      <v-btn
+                        x-large
+                        block
+                        :disabled="!valid"
+                        color="error"
+                        @click="remove"
                       >
-                    </DateTimePicker>
-                  </v-col>
-                  <v-col cols="8">
-                    <v-text-field
-                      v-model="newAnnouncement.title"
-                      :rules="[rules.required]"
-                      label="Title"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-select
-                      v-model="newAnnouncement.petId"
-                      :items="pets"
-                      :loading="selectLoading"
-                      :rules="rules.text"
-                      label="Pets"
-                      required
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-textarea
-                      v-model="newAnnouncement.description"
-                      color="teal"
-                      clearable
-                    >
-                      <template v-slot:label>
-                        <div>Description <small>(optional)</small></div>
-                      </template>
-                    </v-textarea>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="3" xsm="12">
+                        Delete
+                      </v-btn>
+                    </v-col>
+                    <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
+                      <v-btn x-large block @click="cancel">Close</v-btn>
+                    </v-col>
+                    <v-col class="d-flex" cols="12" sm="3" xsm="12">
+                      <v-btn
+                        x-large
+                        block
+                        :disabled="!valid || hasSitter"
+                        color="success"
+                        type="submit"
+                      >
+                        {{ !hasSitter ? "Update" : "Completed" }}
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item v-if="!hasSitter">
+            <v-card
+              v-for="(offer, i) in offers"
+              :key="offer.id"
+              class="mx-auto elevation-20"
+              color="light-green lighten-2"
+              dark
+              style="max-width: 400px"
+            >
+              <v-row justify="space-between">
+                <v-col cols="8">
+                  <v-card-title>
+                    <div>
+                      <div class="text-h5">{{ sitters[i].name }}</div>
+                      <div>{{ sitters[i].description }}</div>
+                    </div>
+                  </v-card-title>
+                </v-col>
+                <v-tooltip bottom color="primary">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-img
+                      class="shrink ma-2 img-hover"
+                      contain
+                      height="125px"
+                      src="https://media.istockphoto.com/vectors/boy-hug-dog-vector-id1249679431?k=20&m=1249679431&s=612x612&w=0&h=Jci7cPM86W59yWd59Bz6CAR15aBHszZE2IHtm4DL9h4="
+                      style="flex-basis: 125px"
+                      v-on="on"
+                      v-bind="attrs"
+                      @click="openProfile(sitters[i])"
+                    ></v-img>
+                  </template>
+                  <span>Click for more details!</span>
+                </v-tooltip>
+              </v-row>
+              <v-divider dark></v-divider>
+              <v-card-actions class="pa-4">
+                <v-tooltip bottom color="primary">
+                  <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                      x-large
-                      block
-                      :disabled="!valid"
-                      color="error"
-                      @click="remove"
+                      color="purple darken-1"
+                      small
+                      fab
+                      outlined
+                      rounded
+                      v-bind="attrs"
+                      v-on="on"
+                      class="ml-1"
+                      @click="accept(offer)"
                     >
-                      Delete
+                      <v-icon dark>mdi-thumb-up</v-icon>
                     </v-btn>
-                  </v-col>
-                  <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                    <v-btn x-large block @click="cancel">Close</v-btn>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="3" xsm="12">
-                    <v-btn
-                      x-large
-                      block
-                      :disabled="!valid"
-                      color="success"
-                      type="submit"
-                    >
-                      Update
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-        <v-tab-item>
-          <v-card class="px-4">
-            <!-- <v-card-text>
-              <v-form ref="registerForm" v-model="valid" lazy-validation>
-                <v-row>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      v-model="firstName"
-                      :rules="[rules.required]"
-                      label="First Name"
-                      maxlength="20"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      v-model="lastName"
-                      :rules="[rules.required]"
-                      label="Last Name"
-                      maxlength="20"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="email"
-                      :rules="emailRules"
-                      label="E-mail"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="username"
-                      :rules="[rules.required]"
-                      label="Username"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="phone"
-                      :rules="phoneRules"
-                      label="Phone"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="password"
-                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                      :rules="[rules.required, rules.min]"
-                      :type="show1 ? 'text' : 'password'"
-                      name="input-10-1"
-                      label="Password"
-                      hint="At least 8 characters"
-                      counter
-                      @click:append="show1 = !show1"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      block
-                      v-model="verify"
-                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                      :rules="[rules.required, passwordMatch]"
-                      :type="show1 ? 'text' : 'password'"
-                      name="input-10-1"
-                      label="Confirm Password"
-                      counter
-                      @click:append="show1 = !show1"
-                      @keyup.enter="submitLogin"
-                    ></v-text-field>
-                  </v-col>
-                  <v-spacer></v-spacer>
-                  <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                    <v-btn
-                      x-large
-                      block
-                      :disabled="!valid"
-                      color="success"
-                      @click="submitRegister"
-                      >Register</v-btn
-                    >
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-card-text> -->
-          </v-card>
-        </v-tab-item>
-      </v-tabs>
-    </div>
-  </v-dialog>
+                  </template>
+                  <span>Hire this person!</span>
+                </v-tooltip>
+                <v-spacer></v-spacer>
+                <span class="grey--text text--lighten-2 text-caption mr-2">
+                  ({{ 4.5 }})
+                </span>
+                <!-- v-model="rating" -->
+                <v-rating
+                  background-color="white"
+                  color="yellow accent-4"
+                  dense
+                  half-increments
+                  hover
+                  size="18"
+                  readonly
+                ></v-rating>
+              </v-card-actions>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item v-else>
+            <v-card
+              class="mx-auto elevation-20"
+              color="light-green lighten-2"
+              dark
+              style="max-width: 400px"
+            >
+              <v-row justify="space-between">
+                <v-col cols="8">
+                  <v-card-title>
+                    <div>
+                      <div class="text-h5">{{ acceptedSitter.name }}</div>
+                      <div>{{ acceptedSitter.description }}</div>
+                    </div>
+                  </v-card-title>
+                </v-col>
+                <v-tooltip bottom color="primary">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-img
+                      class="shrink ma-2 img-hover"
+                      contain
+                      height="125px"
+                      src="https://media.istockphoto.com/vectors/boy-hug-dog-vector-id1249679431?k=20&m=1249679431&s=612x612&w=0&h=Jci7cPM86W59yWd59Bz6CAR15aBHszZE2IHtm4DL9h4="
+                      style="flex-basis: 125px"
+                      v-on="on"
+                      v-bind="attrs"
+                      @click="openProfile(acceptedSitter)"
+                    ></v-img>
+                  </template>
+                  <span>Click for more details!</span>
+                </v-tooltip>
+              </v-row>
+              <v-divider dark></v-divider>
+              <v-card-actions class="pa-4">
+                Don't forget to rate!
+                <v-spacer></v-spacer>
+                <span class="grey--text text--lighten-2 text-caption mr-2">
+                  ({{ 4.5 }})
+                </span>
+                <!-- v-model="rating" -->
+                <v-rating
+                  background-color="white"
+                  color="yellow accent-4"
+                  dense
+                  half-increments
+                  hover
+                  size="18"
+                  readonly
+                ></v-rating>
+              </v-card-actions>
+            </v-card>
+          </v-tab-item>
+        </v-tabs>
+      </div>
+    </v-dialog>
+    <SitterProfileDialog
+      v-if="showProfile"
+      :sitter="currentSitter"
+      @close="showProfile = false"
+    />
+  </v-app>
 </template>
 
 <script>
@@ -212,10 +252,12 @@ import axios from "axios";
 import cfg from "@/config/config.js";
 // import moment from "moment";
 import DateTimePicker from "./DateTimePicker.vue";
+import SitterProfileDialog from "./SitterProfileDialog.vue";
 
 export default {
   components: {
     DateTimePicker,
+    SitterProfileDialog,
   },
   props: ["user", "announcement"],
   data() {
@@ -243,10 +285,14 @@ export default {
       pets: [],
       selectLoading: true,
       newAnnouncement: { ...this.announcement },
+      offers: [],
+      sitters: [],
+      showProfile: false,
+      currentSitter: null,
     };
   },
   async mounted() {
-    const result = await axios.get(
+    let result = await axios.get(
       `${cfg.BACKEND_ADDR}/owners/${this.user.id}/pets`
     );
     result.data.forEach((pet) => {
@@ -257,6 +303,38 @@ export default {
       });
     });
     this.selectLoading = false;
+
+    result = await axios.get(
+      `${cfg.BACKEND_ADDR}/announcements/${this.announcement.id}/offers`
+    );
+    this.offers = result.data;
+    this.sitters = [];
+    this.offers.forEach(async (offer) => {
+      const res = await axios.get(
+        `${cfg.BACKEND_ADDR}/sitters/${offer.sitterId}`
+      );
+      this.sitters.push(res.data);
+    });
+    console.log(this.offers);
+    console.log(this.sitters);
+    console.log(this.hasSitter);
+    const offer = this.offers.filter(
+      (x) => x.id == this.announcement.offerId
+    )[0];
+    console.log(offer);
+    console.log(this.sitters.filter((x) => x.id == offer.sitterId)[0]);
+    console.log(this.user);
+  },
+  computed: {
+    acceptedSitter() {
+      const offer = this.offers.filter(
+        (x) => x.id == this.announcement.offerId
+      )[0];
+      return this.sitters.filter((x) => x.id == offer.sitterId)[0];
+    },
+    hasSitter() {
+      return this.announcement.offerId != null;
+    },
   },
   methods: {
     cancel() {
@@ -270,6 +348,19 @@ export default {
         this.$emit("submit-update", this.newAnnouncement);
       }
     },
+    openProfile(sitter) {
+      this.currentSitter = sitter;
+      this.showProfile = true;
+    },
+    accept(offer) {
+      this.$emit("accept", offer);
+    },
   },
 };
 </script>
+
+<style>
+.img-hover:hover {
+  cursor: pointer;
+}
+</style>

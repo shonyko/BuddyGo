@@ -8,5 +8,6 @@ namespace BuddyGo.DTOs.Announcement {
 
         public string OwnerId { get; set; } = null!;
         public string PetId { get; set; } = null!;
+        public string? OfferId { get; set; } = null!;
     }
 }
