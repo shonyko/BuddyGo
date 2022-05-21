@@ -1,4 +1,5 @@
 using BuddyGo.Data;
+using BuddyGo.Hubs;
 using BuddyGo.Repositories;
 using BuddyGo.Repositories.Impl;
 using BuddyGo.Services;
@@ -12,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -47,13 +50,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(
         builder => {
-            builder.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-        }
-    );
+            builder.WithOrigins("http://localhost:8080")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST")
+                .AllowCredentials();
+        });
 });
-
 var app = builder.Build();
 
 app.UseSwaggerUI(c =>
@@ -89,5 +91,7 @@ app.MapControllerRoute(
 );
 
 app.MapRazorPages();
+app.UseCors();
+app.MapHub<NotificationHub>("/ws/notifications");
 
 app.Run();

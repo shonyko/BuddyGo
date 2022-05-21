@@ -53,7 +53,7 @@ export default {
   components: {
     SitterAnnouncementsDialog,
   },
-  props: ["user"],
+  props: ["user", "socket"],
   data() {
     return {
       announcements: [],
@@ -91,6 +91,7 @@ export default {
         await this.updateList();
         this.seeAnnouncementDetails = false;
         this.alert("Adaugat cu succes!", "success");
+        await this.socket.invoke("SendNotification", JSON.stringify(a));
       } catch (e) {
         console.log(e);
         this.alert("Oops! A aparut o eroare!", "error");

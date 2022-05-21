@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.3",
+    "@microsoft/signalr": "^6.0.5",
     "axios": "^0.26.1",
     "moment": "^2.29.3",
     "roboto-fontface": "*",
