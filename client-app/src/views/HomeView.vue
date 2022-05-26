@@ -67,6 +67,7 @@
           :is="currentTab"
           v-else
           :user="user"
+          :socket="socket"
           @update-user="updateUser"
         ></component>
         <!-- <UserProfile v-else :user="user" @update-user="updateUser" /> -->
@@ -96,6 +97,9 @@
           ></v-progress-circular>
         </div>
       </template>
+      <v-alert v-show="alertVisible" :type="alertType" dismissible>
+        {{ alertMsg }}
+      </v-alert>
     </v-main>
   </v-app>
 </template>
@@ -108,6 +112,7 @@ import UserProfile from "@/components/UserProfile.vue";
 import ManagePets from "@/components/ManagePets.vue";
 import ManageAnnouncements from "@/components/ManageAnnouncements.vue";
 import ExploreAnnouncements from "@/components/ExploreAnnouncements.vue";
+import * as signalR from "@microsoft/signalr";
 
 export default {
   name: "HomeView",
@@ -153,6 +158,12 @@ export default {
     },
     cfg,
     navbar: true,
+    socket: new signalR.HubConnectionBuilder()
+      .withUrl(`${cfg.BACKEND_ADDR}/ws/notifications`)
+      .build(),
+    alertVisible: false,
+    alertType: "info",
+    alertMsg: "",
   }),
   async mounted() {
     let user = JSON.parse(window.localStorage.getItem("user"));
@@ -163,6 +174,13 @@ export default {
     }
 
     await this.updateUser(user);
+
+    await this.socket.start({ withCredentials: false });
+    this.socket.on("ReceiveNotification", (announcement) => {
+      announcement = JSON.parse(announcement);
+      if (announcement.ownerId != this.user.id) return;
+      this.alert(`Somebody made an offer to ${announcement.title}`, "info");
+    });
   },
   computed: {
     incompleteUser() {
@@ -200,6 +218,12 @@ export default {
     },
     setActiveTab(index) {
       this.tabId = this.validTabs[index].name;
+    },
+    alert(msg, type) {
+      this.alertMsg = msg;
+      this.alertType = type;
+      this.alertVisible = true;
+      setTimeout(() => (this.alertVisible = false), 2000);
     },
   },
 };
